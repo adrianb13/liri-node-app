@@ -1,12 +1,12 @@
 require("dotenv").config();
 
 var keys = require("./keys.js");
+var Spotify = require("node-spotify-api");
 var spotify = new Spotify(keys.spotify);
     function Spotify(id, secret) {
         this.id = id;
         this.secret = secret;
     };
-var Spotify = require("node-spotify-api");
 
 var axios = require("axios");
 var moment = require("moment");
@@ -43,13 +43,18 @@ function searchIt (a) {
 // Spotify API
     } else if (a === "spotify-this-song") {
 
-        spotify.search({type: 'track', query: user, limit: 10}, function(err,data) {
+        spotify.search({type: 'track', query: user.toString(), limit: 5}, function(err,data) {
         
             if (err) {
                 return console.log('Error occurred: ' + err);
             };        
-            console.log(data);
-    
+            for (l = 0; l < 5; l++) {
+            console.log("Artist Name: " + data.tracks.items[l].artists[0].name);
+            console.log("Track Name: " + data.tracks.items[l].name);
+            console.log("Link for song preview: " + data.tracks.items[l].preview_url)
+            console.log("Album Name: " + data.tracks.items[l].album.name);
+            console.log("\r\n");
+            };
         });
 
 // IMDb API
