@@ -5,7 +5,7 @@ var spotify = new Spotify(keys.spotify);
     function Spotify(id, secret) {
         this.id = id;
         this.secret = secret;
-    }
+    };
 var Spotify = require("node-spotify-api");
 
 var axios = require("axios");
@@ -16,7 +16,7 @@ var fs = require("fs");
 var a = process.argv[2];
 var b = process.argv;
 var user = [];
-    for (i=3; i < b.length; i++) {
+    for (i = 3; i < b.length; i++) {
         user.push(b[i]);    
     }
 
@@ -28,7 +28,7 @@ function searchIt (a) {
         axios
             .get("https://rest.bandsintown.com/artists/" + user + "/events?app_id=codingbootcamp")
             .then(function(response) {
-                for(j=0; j<10; j++) {
+                for (j = 0; j < 10; j++) {
                     console.log("Venue: " + response.data[j].venue.name);
                     console.log("Location: " + response.data[j].venue.city + ", " + response.data[j].venue.region);
                     var date = response.data[j].datetime;
@@ -36,30 +36,21 @@ function searchIt (a) {
                     console.log("\r\n");
                 }
             })
-            .catch(function(error) {
-                if (error.response) {
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
-                } else if (error.request) {
-                    console.log(error.request);
-                } else {
-                    console.log("Error", error.message);
-                }
-                    console.log(error.config);
+            .catch(function(err) {
+                console.log(err);
             });
     
 // Spotify API
     } else if (a === "spotify-this-song") {
 
-        spotify
-            .get("https://api.spotify.com/v1/search?q=" + user + "&type=track&limit=10")
-            .then(function(response) {
-                console.log(response);
-            })
-            .catch(function(err) {
-                console.log(err);
-            });
+        spotify.search({type: 'track', query: user, limit: 10}, function(err,data) {
+        
+            if (err) {
+                return console.log('Error occurred: ' + err);
+            };        
+            console.log(data);
+    
+        });
 
 // IMDb API
     } else if (a === "movie-this") {
