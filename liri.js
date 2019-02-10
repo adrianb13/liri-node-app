@@ -86,7 +86,7 @@ function searchIt (a) {
             var dataArr = data.split(",");
             console.log(dataArr);
             a = dataArr[0];
-            user.push = dataArr[1];
+            user.push(dataArr[1]);
             searchIt(a);  
         });
     };
