@@ -9,7 +9,7 @@ var moment = require("moment");
 
 var fs = require("fs");
 
-var a = process.argv[2];
+var a = process.argv[2].toLowerCase();
 var b = process.argv;
 var user = [];
     for (i = 3; i < b.length; i++) {
@@ -39,38 +39,51 @@ function searchIt (a) {
 // Spotify API
     } else if (a === "spotify-this-song") {
 
-        spotify.search({type: 'track', query: user.toString(), limit: 5}, function(err,data) {
-        
-            if (err) {
-                return console.log('Error occurred: ' + err);
-            };        
-            for (l = 0; l < 5; l++) {
-            console.log("Artist Name: " + data.tracks.items[l].artists[0].name);
-            console.log("Track Name: " + data.tracks.items[l].name);
-            console.log("Link for song preview: " + data.tracks.items[l].preview_url)
-            console.log("Album Name: " + data.tracks.items[l].album.name);
-            console.log("\r\n");
-            };
-        });
+        if (b.length === 3) {
+            spotify.search({type: 'track', query: "the sign", limit: 10}, function(err,data) {
+            
+                if (err) {
+                    return console.log('Error occurred: ' + err);
+                };        
+                
+                l=9
+                musicReturn(data, l);                               
+            });
+
+        } else {
+
+            spotify.search({type: 'track', query: user.toString(), limit: 5}, function(err,data) {
+            
+                if (err) {
+                    return console.log('Error occurred: ' + err);
+                };        
+
+                for (l = 0; l < 5; l++) {
+                    musicReturn(data, l);
+                };
+            });
+        }
 
 // IMDb API
     } else if (a === "movie-this") {
-
-        axios
-            .get("https://www.omdbapi.com/?t=" + user + "&y=&plot=short&apikey=trilogy")
-            .then(function(response) {
-                movieReturn(response)
-            })
-            .catch(function(error) {
-                console.log(error);
-            
+        
+        if (b.length === 3) {
             axios
                 .get("https://www.omdbapi.com/?t=mr+nobody&y=&plot=short&apikey=trilogy")
                 .then(function(response) {
                     movieReturn(response)
                 });
-            });
+        } else {
 
+            axios
+                .get("https://www.omdbapi.com/?t=" + user + "&y=&plot=short&apikey=trilogy")
+                .then(function(response) {
+                    movieReturn(response)
+                })
+                .catch(function(error) {
+                    console.log(error);  
+                });
+        }
 // Read random.txt file            
     } else if (a === "do-what-it-says") {
 
@@ -80,8 +93,8 @@ function searchIt (a) {
             };
 
             var dataArr = data.split(",");
-
             a = dataArr[0];
+            b.push(dataArr[1]);
             user.push(dataArr[1]);
             
             searchIt(a);  
@@ -91,8 +104,18 @@ function searchIt (a) {
 
 searchIt(a);
 
-// IMDb info
+// Spotify Response Info
+function musicReturn (data, l) {
+    console.log("\r\n");
+    console.log("Artist Name: " + data.tracks.items[l].artists[0].name);
+    console.log("Track Name: " + data.tracks.items[l].name);
+    console.log("Link for song preview: " + data.tracks.items[l].preview_url)
+    console.log("Album Name: " + data.tracks.items[l].album.name);
+}
+
+// IMDb Resoponse Info
 function movieReturn (response) {
+    console.log("\r\n");
     console.log("Movie Title: " + response.data.Title);
     console.log("Movie Release Year: " + response.data.Year);
     console.log("IMDb Rating: " + response.data.imdbRating);
