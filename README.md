@@ -1,6 +1,6 @@
 # liri-node-app
 
-(For the screenshots of the working app, please view Screenshot.docx)
+(For the screenshots of the working app, please view Screenshots.docx)
 
 This is a node.js based app.  You will need your own Spotify API keys to run the app.  
 The app uses the Spotify API, BandsInTown API, and IMDb API to search for song details, artist events, or movie details.
